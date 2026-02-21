@@ -32,11 +32,11 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     e.preventDefault();
 
     try {
-      await login({ email, password });
+      await login({ email: email.toLowerCase(), password });
 
       toastSuccess("Login successful");
       handleClose();
-    } catch (error) {
+    } catch {
       // Error toast handled in API file
       // Keep modal open so user can retry
     }
