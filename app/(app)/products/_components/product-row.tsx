@@ -5,7 +5,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import ProductActions from "@/app/(app)/products/_components/product-actions";
 import { Product } from "@/lib/store/product/use-product-manager-store";
 import { ProductInventoryField } from "@/lib/types/product";
-
+import { AdminOnly } from "@/components/reuseables/admin-only";
 
 export function ProductRow({ product }: { product: Product }) {
   const totalQuantity = product?.inventory?.reduce(
@@ -48,9 +48,11 @@ export function ProductRow({ product }: { product: Product }) {
         </Badge>
       </TableCell>
 
-      <TableCell>
-        <ProductActions productId={product.basic_info.id} />
-      </TableCell>
+      <AdminOnly>
+        <TableCell>
+          <ProductActions productId={product.basic_info.id} />
+        </TableCell>
+      </AdminOnly>
     </TableRow>
   );
 }

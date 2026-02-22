@@ -1,5 +1,5 @@
-
 import CustomerActions from "@/app/(app)/customers/_components/customer-actions";
+import { AdminOnly } from "@/components/reuseables/admin-only";
 import { DateDisplay } from "@/components/reuseables/date-display";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -7,7 +7,11 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { CustomerListItem } from "@/lib/types/customer";
 import { getActivityVariant, getCustomerStatusVariant } from "@/lib/utils";
 
-export default function CustomerRow({ customer }: { customer: CustomerListItem }) {
+export default function CustomerRow({
+  customer,
+}: {
+  customer: CustomerListItem;
+}) {
   return (
     <TableRow key={customer.id}>
       <TableCell>
@@ -31,8 +35,7 @@ export default function CustomerRow({ customer }: { customer: CustomerListItem }
       <TableCell>
         <Badge
           variant={getActivityVariant(customer.activity)}
-          className="flex items-center capitalize gap-1 w-fit"
-        >
+          className="flex items-center capitalize gap-1 w-fit">
           {" "}
           {customer.activity}
         </Badge>{" "}
@@ -44,17 +47,18 @@ export default function CustomerRow({ customer }: { customer: CustomerListItem }
       <TableCell>
         <Badge
           variant={getCustomerStatusVariant(customer.status)}
-          className="flex items-center capitalize gap-1 w-fit"
-        >
+          className="flex items-center capitalize gap-1 w-fit">
           {customer.status}
         </Badge>
       </TableCell>
       <TableCell>
         <DateDisplay date={customer.join_date} />
       </TableCell>
-      <TableCell>
-        <CustomerActions customer={customer} />
-      </TableCell>
+      <AdminOnly>
+        <TableCell>
+          <CustomerActions customer={customer} />
+        </TableCell>
+      </AdminOnly>
     </TableRow>
   );
 }

@@ -18,6 +18,7 @@ import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { useProductModalStore } from "@/lib/store/product/use-product-modal-store";
 import { Plus } from "lucide-react";
 import { CreateProductModal } from "./_modals/create-product-modal";
+import { AdminOnly } from "@/components/reuseables/admin-only";
 
 export default function ProductsPage() {
   const openProductModal = useProductModalStore(
@@ -45,13 +46,16 @@ export default function ProductsPage() {
             title="Products"
             subtitle=" Manage your product inventory"
           />
-          <Button
-            onClick={() =>
-              openProductModal({ type: "add-product", product_id: null })
-            }>
-            <Plus className="mr-2 h-4 w-4" />
-            Add Product
-          </Button>
+          <AdminOnly>
+            {" "}
+            <Button
+              onClick={() =>
+                openProductModal({ type: "add-product", product_id: null })
+              }>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Product
+            </Button>
+          </AdminOnly>
 
           <CreateProductModal />
         </div>

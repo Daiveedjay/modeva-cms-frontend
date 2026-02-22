@@ -15,6 +15,7 @@ import { Plus } from "lucide-react";
 import CategoryStats from "./_components/category-stats";
 import CategoryTable from "./_components/category-table";
 import { CreateCategoryModal } from "./_modals/create-category-modal";
+import { AdminOnly } from "@/components/reuseables/admin-only";
 
 export default function CategoriesPage() {
   const openCategoryModal = useCategoriesModalStore(
@@ -42,13 +43,16 @@ export default function CategoriesPage() {
             title="Categories"
             subtitle="Organize your products into categories"
           />
-          <Button
-            onClick={() =>
-              openCategoryModal({ type: "add-category", category_id: null })
-            }>
-            <Plus className="mr-2 h-4 w-4" />
-            Add Category
-          </Button>
+          <AdminOnly>
+            {" "}
+            <Button
+              onClick={() =>
+                openCategoryModal({ type: "add-category", category_id: null })
+              }>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Category
+            </Button>
+          </AdminOnly>
 
           <CreateCategoryModal />
         </div>

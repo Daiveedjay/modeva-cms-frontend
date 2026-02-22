@@ -11,6 +11,7 @@ import {
 import { Table, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 import { useState } from "react";
+import { AdminOnly } from "@/components/reuseables/admin-only";
 
 export default function ProductsTable() {
   const [query, setQuery] = useState("");
@@ -56,7 +57,10 @@ export default function ProductsTable() {
                 <TableHead>Price</TableHead>
                 <TableHead>Stock</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead className="w-17.5">Actions</TableHead>
+                <AdminOnly>
+                  {" "}
+                  <TableHead className="w-17.5">Actions</TableHead>
+                </AdminOnly>
               </TableRow>
             </TableHeader>
             <ProductsTableBody />

@@ -30,6 +30,7 @@ export default function ProductActions({ productId }: { productId: string }) {
         <DropdownMenuItem onClick={() => handleAction("view-product")}>
           View Details
         </DropdownMenuItem>
+
         <DropdownMenuItem onClick={() => handleAction("update-product")}>
           Update Product
         </DropdownMenuItem>

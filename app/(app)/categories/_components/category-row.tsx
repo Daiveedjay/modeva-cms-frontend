@@ -2,6 +2,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Category } from "@/lib/types/category";
 import { CategoryActions } from "./category-actions";
+import { AdminOnly } from "@/components/reuseables/admin-only";
 
 interface Props {
   category: Category;
@@ -34,9 +35,12 @@ export function CategoryRow({ category, parent, level }: Props) {
           {category.status}
         </Badge>
       </TableCell>
-      <TableCell>
-        <CategoryActions category={category} parentStatus={parent?.status} />
-      </TableCell>
+      <AdminOnly>
+        {" "}
+        <TableCell>
+          <CategoryActions category={category} parentStatus={parent?.status} />
+        </TableCell>
+      </AdminOnly>
     </TableRow>
   );
 }

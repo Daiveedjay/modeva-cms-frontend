@@ -30,6 +30,7 @@ import { FolderTree, WifiOff } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Category } from "@/lib/types/category";
 import { useClearQueryParams } from "@/hooks/use-clear-query-params";
+import { AdminOnly } from "@/components/reuseables/admin-only";
 
 // Enhanced Placeholder Component
 export function SearchCategoriesModal({
@@ -193,7 +194,10 @@ export function SearchCategoriesModal({
                     <TableHead>Parent</TableHead>
                     <TableHead>Products</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <AdminOnly>
+                      {" "}
+                      <TableHead>Actions</TableHead>
+                    </AdminOnly>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

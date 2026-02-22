@@ -17,6 +17,7 @@ import { CategoryTableBody } from "./category-table-body";
 
 import { SearchCategoriesModal } from "../_modals/search-categories-modal";
 import { SearchBar } from "@/components/reuseables/component-search";
+import { AdminOnly } from "@/components/reuseables/admin-only";
 
 export default function CategoryTable() {
   const [query, setQuery] = useState("");
@@ -61,7 +62,10 @@ export default function CategoryTable() {
                 <TableHead>Parent Category</TableHead>
                 <TableHead>Products</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead className="w-17.5">Actions</TableHead>
+                <AdminOnly>
+                  {" "}
+                  <TableHead className="w-17.5">Actions</TableHead>
+                </AdminOnly>
               </TableRow>
             </TableHeader>
             <CategoryTableBody />

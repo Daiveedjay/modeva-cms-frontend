@@ -1,6 +1,7 @@
 "use client";
 
 import OrderActions from "@/app/(app)/orders/_components/order-actions";
+import { AdminOnly } from "@/components/reuseables/admin-only";
 import { getStatusIcon } from "@/components/reuseables/get-status-icon";
 import { Badge } from "@/components/ui/badge";
 import { TableCell, TableRow } from "@/components/ui/table";
@@ -30,15 +31,17 @@ export function OrderRow({ order }: { order: Order }) {
       <TableCell>
         <Badge
           variant={getOrderStatusVariant(order.status)}
-          className="flex items-center gap-1 capitalize w-fit"
-        >
+          className="flex items-center gap-1 capitalize w-fit">
           {getStatusIcon(order.status)}
           {order.status}
         </Badge>
       </TableCell>
-      <TableCell>
-        <OrderActions order={order} />
-      </TableCell>
+      <AdminOnly>
+        {" "}
+        <TableCell>
+          <OrderActions order={order} />
+        </TableCell>
+      </AdminOnly>
     </TableRow>
   );
 }

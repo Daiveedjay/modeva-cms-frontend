@@ -12,6 +12,7 @@ import {
 import { Table, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 import { useState } from "react";
+import { AdminOnly } from "@/components/reuseables/admin-only";
 
 export default function OrdersTable() {
   const [query, setQuery] = useState("");
@@ -48,7 +49,10 @@ export default function OrdersTable() {
                 <TableHead>Items</TableHead>
                 <TableHead>Total (USD)</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead className="w-17.5">Actions</TableHead>
+                <AdminOnly>
+                  {" "}
+                  <TableHead className="w-17.5">Actions</TableHead>
+                </AdminOnly>
               </TableRow>
             </TableHeader>
             <OrdersTableBody />

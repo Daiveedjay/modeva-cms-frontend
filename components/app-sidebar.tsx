@@ -8,7 +8,6 @@ import {
   Package,
   Shield,
   ShoppingCart,
-  Store,
   TrendingUp,
   User,
   Users,
@@ -17,7 +16,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
+import { useGetAdminMe } from "@/app/_queries/admin/get-admin-me";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,11 +37,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
-import { useGetAdminMe } from "@/app/_queries/admin/get-admin-me";
 
-import { LoginModal } from "@/components/reuseables/login-modal";
 import { LogoutModal } from "@/app/(app)/profile/_modals/logout-modal";
+import { LoginModal } from "@/components/reuseables/login-modal";
 import Logo from "@/components/reuseables/logo";
 
 const menuItems = [
@@ -90,11 +89,12 @@ export function AppSidebar() {
   const { data, error } = useGetAdminMe();
   const profile = data?.data;
   const isLoggedIn = !error && profile;
+  const isAdmin = profile?.role === "super_admin" || profile?.role === "admin";
 
-  // const handleLoginSuccess = () => {
-  //   // Refetch admin me to update sidebar
-  //   refetch();
-  // };
+  const filteredMenuItems = menuItems.filter((item) => {
+    if (item.url === "/admins") return isAdmin;
+    return true;
+  });
 
   return (
     <Sidebar collapsible="icon">
@@ -103,7 +103,7 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/">
-               <Logo/>
+                <Logo />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">Modeva CMS</span>
                   <span className="truncate text-xs">Admin Dashboard</span>
@@ -119,7 +119,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => (
+              {filteredMenuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
