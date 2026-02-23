@@ -101,7 +101,7 @@ function CategoryContent() {
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Add new category</DialogTitle>
+        <DialogTitle className=" ">Add new category</DialogTitle>
       </DialogHeader>
 
       <form onSubmit={handleSubmit} className="space-y-4">

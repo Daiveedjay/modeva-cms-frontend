@@ -36,6 +36,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 
 import { LogoutModal } from "@/app/(app)/profile/_modals/logout-modal";
@@ -96,6 +97,8 @@ export function AppSidebar() {
     return true;
   });
 
+  const { setOpenMobile } = useSidebar();
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -128,7 +131,10 @@ export function AppSidebar() {
                     className={
                       pathname === item.url ? "text-primary!" : undefined
                     }>
-                    <Link href={item.url}>
+                    <Link
+                      href={item.url}
+                      onClick={() => setOpenMobile(false)} // 👈 CLOSES SIDEBAR ON MOBILE
+                    >
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>

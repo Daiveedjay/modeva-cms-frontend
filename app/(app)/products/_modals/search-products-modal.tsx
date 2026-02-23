@@ -84,7 +84,7 @@ export function SearchProductsModal({
       onOpenChange={(newOpen) => {
         if (!newOpen) handleClose();
       }}>
-      <DialogContent className="max-w-6xl! w-full! overflow-auto">
+      <DialogContent className="w-[calc(100vw-2rem)] min-w-0 lg:min-w-4xl max-h-[90dvh] overflow-auto">
         <DialogHeader>
           <DialogTitle>Search Products</DialogTitle>
           <DialogDescription>
@@ -98,13 +98,11 @@ export function SearchProductsModal({
             autoFocus
             placeholder="Type to search products..."
             value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-            }}
-            className="w-80"
+            onChange={(e) => setQuery(e.target.value)}
+            className="w-full max-w-sm"
           />
           {isLoading && (
-            <span className="ml-4 text-sm flex items-center gap-2 text-muted-foreground">
+            <span className="ml-2 text-sm flex items-center gap-2 text-muted-foreground shrink-0">
               <Spinner /> Searching...
             </span>
           )}
@@ -112,15 +110,9 @@ export function SearchProductsModal({
 
         {/* Error state */}
         {isError && (
-          // <SearchProductsError
-          //   onRetry={refetch}
-          //   isRetrying={isFetching}
-          //   errorMessage="Unable to search products"
-          // />
-
           <SearchErrorBase
             title="Couldn't Fetch Products"
-            message={`Unable to search products. Please try again in a moment.`}
+            message="Unable to search products. Please try again in a moment."
             onRetry={refetch}
             isRetrying={isFetching}
             mainIcon={ShoppingBag}
@@ -128,7 +120,6 @@ export function SearchProductsModal({
           />
         )}
 
-        {/* Placeholder */}
         {showPlaceholder && !isError && (
           <SearchPlaceholderBase
             setQuery={setQuery}
@@ -141,9 +132,7 @@ export function SearchProductsModal({
           />
         )}
 
-        {/* No results */}
         {hasNoResults && (
-          // <NoProductsSearchResult query={effectiveQueryToShow!} />
           <SearchNoResultBase
             query={effectiveQueryToShow!}
             title="No Products Found"
@@ -157,13 +146,12 @@ export function SearchProductsModal({
           />
         )}
 
-        {/* Results */}
         {hasResults && (
           <>
             <p className="text-sm text-muted-foreground mb-2">
               Showing results for: &quot;{effectiveQueryToShow}&quot;
             </p>
-            <div className="overflow-auto max-h-[50vh] rounded-md border">
+            <div className="overflow-auto max-h-[50dvh] rounded-md border">
               <Table>
                 <TableHeader>
                   <TableRow>

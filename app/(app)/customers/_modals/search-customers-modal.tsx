@@ -38,7 +38,6 @@ export function SearchCustomersModal({
 
   const store = useSearchCustomersStore((store) => store);
 
-  // Debounce the entire store to avoid excessive API calls
   const debouncedStore = useDebounce(store, 1000);
 
   const computedFilters = useMemo(
@@ -72,7 +71,6 @@ export function SearchCustomersModal({
 
   const effectiveQueryToShow = lastEffectiveQuery;
 
-  // Responsive placeholder (raw store)
   const showPlaceholder = !hasActiveFilters(store) && !isError;
 
   const hasResults =
@@ -99,7 +97,7 @@ export function SearchCustomersModal({
 
   return (
     <Dialog open={open} onOpenChange={(newOpen) => !newOpen && handleClose()}>
-      <DialogContent className="max-w-6xl! max-h-5/6 overflow-y-auto w-full!">
+      <DialogContent className="w-[calc(100vw-2rem)] min-w-0 lg:min-w-4xl max-h-[90dvh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Search Customers</DialogTitle>
           <DialogDescription>

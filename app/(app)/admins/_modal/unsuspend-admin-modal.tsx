@@ -32,15 +32,13 @@ export function UnsuspendAdminModal() {
 
   const admin_data = data?.data;
 
-  // Keep modal closed until data loads
   if (!open) return null;
   if (isLoading) return null;
 
-  // Show error dialog if admin fetch failed
   if (isError || !admin_data) {
     return (
       <Dialog open={open} onOpenChange={closeAdminModal}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="w-[calc(100vw-2rem)] max-w-md">
           <DialogHeader>
             <DialogTitle>Failed to load admin</DialogTitle>
             <DialogDescription>
@@ -61,15 +59,12 @@ export function UnsuspendAdminModal() {
 
   const handleConfirm = async () => {
     if (!admin_id) return;
-
     try {
       await unsuspendAdmin({ admin_id });
-
       toastSuccess("Admin unsuspended successfully");
       closeAdminModal();
-    } catch (error) {
+    } catch {
       // Error toast handled in API file
-      // Keep modal open so user can retry
     }
   };
 
@@ -79,7 +74,7 @@ export function UnsuspendAdminModal() {
       onOpenChange={(next) => {
         if (!next && !isPending) closeAdminModal();
       }}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="w-[calc(100vw-2rem)] max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <CheckCircle className="h-5 w-5 text-success" />

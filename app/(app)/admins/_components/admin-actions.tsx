@@ -49,7 +49,7 @@ export default function AdminActions({ admin }: { admin: Admin }) {
 
         {admin.role !== "super_admin" && is_super_admin && (
           <>
-            {admin.status === "active" ? (
+            {admin.status === "active" || admin.status === "inactive" ? (
               <Button
                 variant="ghost"
                 className="w-full text-destructive justify-start"

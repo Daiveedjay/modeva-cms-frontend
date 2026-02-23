@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -20,9 +21,11 @@ import { useMemo, useRef, useState } from "react";
 import AvailableParents from "../_components/available-parents";
 import ReassignSubCategories from "../_components/reassign-sub-categories";
 import { ReassignmentLines } from "../_components/reassignment-lines";
+
 import { BoxPositions } from "../_hooks/get-connection-path";
 import { useBoxPositions } from "../_hooks/use-box-positions";
 import { Reassignment } from "@/lib/types/category";
+import MobileReassignLayout from "@/app/(app)/categories/_components/mobile-reassign-sub-categories";
 
 export interface Connection {
   id: string;
@@ -30,7 +33,7 @@ export interface Connection {
   parentId: string;
 }
 
-export function ReassignSubcategories() {
+export function ReassignSubcategoriesModal() {
   const categoryModal = useCategoriesModalStore((s) => s.categoryModal);
   const closeCategoryModal = useCategoriesModalStore(
     (s) => s.closeCategoryModal,
@@ -100,14 +103,14 @@ export function ReassignSubcategories() {
     setBoxPositions,
   });
 
-  // Keep modal closed until data loads
   if (!open) return null;
   if (isLoadingCategory || isLoadingParents) return null;
   if (!categoryToDelete) return null;
 
-  const handleSubClick = (subId: string) => {
-    if (isPending) return; // Prevent interaction during deletion
+  // ── Desktop line-drawing handlers ──────────────────────────────────────────
 
+  const handleSubClick = (subId: string) => {
+    if (isPending) return;
     if (activeSub === subId) {
       setConnections((prev) => prev.filter((conn) => conn.subId !== subId));
       setAssignments((prev) => {
@@ -122,18 +125,39 @@ export function ReassignSubcategories() {
   };
 
   const handleParentClick = (parentId: string) => {
-    if (!activeSub || isPending) return; // Prevent interaction during deletion
-
+    if (!activeSub || isPending) return;
     const connectionId = `${activeSub}-${parentId}`;
-
     setConnections((prev) => [
       ...prev.filter((c) => c.subId !== activeSub),
       { id: connectionId, subId: activeSub, parentId },
     ]);
-
     setAssignments((prev) => ({ ...prev, [activeSub]: parentId }));
     setActiveSub(null);
   };
+
+  // ── Mobile select handlers ──────────────────────────────────────────────────
+
+  const handleMobileAssign = (subId: string, parentId: string) => {
+    if (isPending) return;
+    const connectionId = `${subId}-${parentId}`;
+    setConnections((prev) => [
+      ...prev.filter((c) => c.subId !== subId),
+      { id: connectionId, subId, parentId },
+    ]);
+    setAssignments((prev) => ({ ...prev, [subId]: parentId }));
+  };
+
+  const handleMobileUnassign = (subId: string) => {
+    if (isPending) return;
+    setConnections((prev) => prev.filter((c) => c.subId !== subId));
+    setAssignments((prev) => {
+      const copy = { ...prev };
+      delete copy[subId];
+      return copy;
+    });
+  };
+
+  // ── Shared ─────────────────────────────────────────────────────────────────
 
   const clearSelections = () => {
     setConnections([]);
@@ -156,15 +180,13 @@ export function ReassignSubcategories() {
 
     try {
       await deleteWithOptions({ mode: "reassign", reassignments });
-
       toastSuccess(
         "Category deleted and sub-categories reassigned successfully",
       );
       clearSelections();
       closeCategoryModal();
     } catch {
-      // Error toast handled in API file
-      // Keep modal open so user can retry
+      // Error toast handled in API file — keep modal open for retry
     }
   };
 
@@ -172,28 +194,52 @@ export function ReassignSubcategories() {
     <Dialog open={open} onOpenChange={isPending ? undefined : handleCancel}>
       <DialogContent
         showCloseButton={false}
-        className="max-w-6xl! pt-0 w-full! max-h-[70vh] overflow-y-scroll">
-        <DialogHeader className="space-y-3 flex items-start flex-row justify-between sticky top-0 bg-background pt-6 pb-2 z-20">
-          <div>
-            <DialogTitle className="text-2xl">
+        className="
+          w-[calc(100vw-2rem)] max-w-6xl!
+          max-h-[85dvh] lg:max-h-[70vh]
+          overflow-y-auto
+          pt-0
+        ">
+        {/* ── Header ───────────────────────────────────────────────────────── */}
+        <DialogHeader className="flex flex-row items-start justify-between gap-4 sticky top-0 bg-background pt-5 pb-2 z-20">
+          <div className="min-w-0">
+            <DialogTitle className="text-xl lg:text-2xl leading-tight">
               Reassign Sub-categories
             </DialogTitle>
-            <p className="text-muted-foreground">
-              Before deleting &quot;{categoryToDelete.name}&quot;, please
-              reassign its sub-categories to new parent categories.
-            </p>
+            <DialogDescription className="text-muted-foreground mt-1 text-sm">
+              Before deleting &quot;{categoryToDelete.name}&quot;, reassign its
+              sub-categories to new parent categories.
+            </DialogDescription>
           </div>
-          <div
-            className={`p-1 text-muted-foreground hover:text-foreground rounded-sm hover:bg-accent/50 ${
-              isPending ? "cursor-not-allowed opacity-50" : "cursor-pointer"
-            }`}
-            onClick={isPending ? undefined : handleCancel}>
+          <button
+            aria-label="Close"
+            disabled={isPending}
+            onClick={isPending ? undefined : handleCancel}
+            className="shrink-0 p-1 rounded-sm text-muted-foreground hover:text-foreground hover:bg-accent/50 disabled:cursor-not-allowed disabled:opacity-50 transition-colors">
             <X size={18} />
-          </div>
+          </button>
         </DialogHeader>
+
         <Separator />
 
-        <div ref={containerRef} className="relative flex gap-12 py-8 min-h-100">
+        {/* ── Body ─────────────────────────────────────────────────────────── */}
+
+        {/* Mobile layout (< lg) */}
+        <div className="lg:hidden px-1">
+          <MobileReassignLayout
+            childrenfromCategory={childrenfromCategory}
+            availableParents={availableParents}
+            assignments={assignments}
+            onAssign={handleMobileAssign}
+            onUnassign={handleMobileUnassign}
+            isPending={isPending}
+          />
+        </div>
+
+        {/* Desktop layout (≥ lg) */}
+        <div
+          ref={containerRef}
+          className="relative hidden lg:flex gap-12 py-8 min-h-100">
           <ReassignmentLines
             connections={connections}
             boxPositions={boxPositions}
@@ -224,8 +270,9 @@ export function ReassignSubcategories() {
           />
         </div>
 
+        {/* ── Footer ───────────────────────────────────────────────────────── */}
         <Separator />
-        <DialogFooter className="flex justify-between items-center">
+        <DialogFooter className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between pt-1">
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
@@ -234,26 +281,28 @@ export function ReassignSubcategories() {
               disabled={Object.keys(assignments).length === 0 || isPending}
               className="flex items-center gap-2 bg-transparent">
               <RotateCcw className="h-4 w-4" />
-              Clear Selection
+              Clear
             </Button>
-            <span className="text-sm text-muted-foreground">
+            <span className="text-sm text-muted-foreground whitespace-nowrap">
               {Object.keys(assignments).length} of {childrenfromCategory.length}{" "}
               assigned
             </span>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 w-full sm:w-auto">
             <Button
               variant="outline"
+              className="flex-1 sm:flex-none"
               onClick={handleCancel}
               disabled={isPending}>
               Cancel
             </Button>
             <Button
               variant="destructive"
+              className="flex-1 sm:flex-none"
               onClick={handleReassign}
               disabled={!allAssigned || isPending}>
               {isPending && <Spinner />}
-              {isPending ? "Deleting..." : "Confirm & Delete Category"}
+              {isPending ? "Deleting…" : "Confirm & Delete"}
             </Button>
           </div>
         </DialogFooter>

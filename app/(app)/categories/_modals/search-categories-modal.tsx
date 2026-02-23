@@ -32,7 +32,6 @@ import { Category } from "@/lib/types/category";
 import { useClearQueryParams } from "@/hooks/use-clear-query-params";
 import { AdminOnly } from "@/components/reuseables/admin-only";
 
-// Enhanced Placeholder Component
 export function SearchCategoriesModal({
   open,
   onClose,
@@ -50,7 +49,6 @@ export function SearchCategoriesModal({
   const debouncedQuery = useDebounce(query, 500);
   const limit = 5;
 
-  // Keep lastFetchedQuery to still show data when input is cleared
   const [lastFetchedQuery, setLastFetchedQuery] = useState<string | null>(null);
 
   const { data, isLoading, isError, isFetching, refetch } = useSearchCategories(
@@ -77,7 +75,6 @@ export function SearchCategoriesModal({
     return rows;
   }
 
-  // Update lastFetchedQuery when new non-empty query comes in
   if (debouncedQuery && debouncedQuery !== lastFetchedQuery) {
     setLastFetchedQuery(debouncedQuery);
   }
@@ -113,7 +110,7 @@ export function SearchCategoriesModal({
       onOpenChange={(newOpen) => {
         if (!newOpen) handleClose();
       }}>
-      <DialogContent className="max-w-6xl! w-full! overflow-auto ">
+      <DialogContent className="w-[calc(100vw-2rem)] min-w-0 lg:min-w-4xl max-h-[90dvh]">
         <DialogHeader>
           <DialogTitle>Search Categories</DialogTitle>
           <DialogDescription>
@@ -127,13 +124,11 @@ export function SearchCategoriesModal({
             autoFocus
             placeholder="Type to search categories..."
             value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-            }}
-            className="w-80"
+            onChange={(e) => setQuery(e.target.value)}
+            className="w-full max-w-sm"
           />
           {isLoading && (
-            <span className="ml-4 text-sm flex items-center gap-2 text-muted-foreground">
+            <span className="ml-2 text-sm flex items-center gap-2 text-muted-foreground shrink-0">
               <Spinner /> Searching...
             </span>
           )}
@@ -143,7 +138,7 @@ export function SearchCategoriesModal({
         {isError && (
           <SearchErrorBase
             title="Something Went Wrong"
-            message={`Unable to fetch categories. Please check your connection and try again.`}
+            message="Unable to fetch categories. Please check your connection and try again."
             onRetry={refetch}
             isRetrying={isFetching}
             mainIcon={FolderTree}
@@ -151,7 +146,6 @@ export function SearchCategoriesModal({
           />
         )}
 
-        {/* Show placeholder (greyed out during loading) */}
         {showPlaceholder && !isError && (
           <SearchPlaceholderBase
             setQuery={setQuery}
@@ -164,7 +158,6 @@ export function SearchCategoriesModal({
           />
         )}
 
-        {/* No results state */}
         {hasNoResults && (
           <SearchNoResultBase
             query={effectiveQueryToShow!}
@@ -179,13 +172,12 @@ export function SearchCategoriesModal({
           />
         )}
 
-        {/* Show results if we have data */}
         {hasResults && (
           <>
             <p className="text-sm text-muted-foreground mb-2">
               Showing results for: &quot;{effectiveQueryToShow}&quot;
             </p>
-            <div className="overflow-auto max-h-[50vh]">
+            <div className="overflow-auto max-h-[50dvh] rounded-md border">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -195,7 +187,6 @@ export function SearchCategoriesModal({
                     <TableHead>Products</TableHead>
                     <TableHead>Status</TableHead>
                     <AdminOnly>
-                      {" "}
                       <TableHead>Actions</TableHead>
                     </AdminOnly>
                   </TableRow>

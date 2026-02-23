@@ -31,7 +31,7 @@ export default function AvailableParents({
       <div className="space-y-3 flex flex-col justify-end items-end">
         {availableParents.map((parent) => {
           const assignedCount = Object.values(assignments).filter(
-            (id) => id === parent.id
+            (id) => id === parent.id,
           ).length;
           return (
             <motion.div
@@ -46,7 +46,7 @@ export default function AvailableParents({
                 activeSub &&
                   "hover:border-primary hover:bg-card-foreground hover:text-background ",
                 assignedCount > 0 &&
-                  "border-secondary text-background bg-primary"
+                  "border-secondary text-background bg-primary",
               )}>
               <div className="flex items-center gap-3">
                 <Checkbox

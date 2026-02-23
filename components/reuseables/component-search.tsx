@@ -34,7 +34,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         value={query}
         onChange={handleChange}
         placeholder={placeholder}
-        className="pl-8"
+        className="pl-8 "
       />
     </div>
   );

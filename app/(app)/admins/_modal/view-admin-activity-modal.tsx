@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  useGetSingleAdminActivityLogs,
-} from "@/app/_queries/admin/get-admin-activity-logs-by-id";
+import { useGetSingleAdminActivityLogs } from "@/app/_queries/admin/get-admin-activity-logs-by-id";
 
 import { PaginationControls } from "@/components/reuseables/pagination-controls";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -34,7 +32,7 @@ export function ViewAdminActivityModal() {
   const adminModal = useAdminModalStore((s) => s.adminModal);
   const closeAdminModal = useAdminModalStore((s) => s.closeAdminModal);
 
-  const [selectedActivity, setSelectedActivity] = useState<ActivityLog| null>(
+  const [selectedActivity, setSelectedActivity] = useState<ActivityLog | null>(
     null,
   );
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -42,7 +40,6 @@ export function ViewAdminActivityModal() {
   const open =
     !!adminModal?.admin_id && adminModal.type === "view-admin-activity";
   const admin = adminModal?.admin_id ?? null;
-
   const adminId = adminModal?.admin_id ?? "";
 
   const { data, isLoading, isError, error, isFetching } =
@@ -52,9 +49,7 @@ export function ViewAdminActivityModal() {
   const adminData = response?.admin;
   const activityLogs = response?.logs || [];
 
-  if (isLoading) {
-    return null;
-  }
+  if (isLoading) return null;
 
   if (isError) {
     return (
@@ -62,11 +57,7 @@ export function ViewAdminActivityModal() {
     );
   }
 
-  if (response === null || response === undefined) {
-    return null;
-  }
-
-  // guard AFTER hooks
+  if (response === null || response === undefined) return null;
   if (!open || !admin) return null;
 
   return (
@@ -76,31 +67,33 @@ export function ViewAdminActivityModal() {
         onOpenChange={(next) => {
           if (!next) closeAdminModal();
         }}>
-        <DialogContent className="max-w-4xl! w-full max-h-[90vh] overflow-hidden flex flex-col p-0">
-          {/* Header Section */}
-          <div className="border-b border-border bg-background px-8 py-8">
-            <div className="flex items-start gap-6">
+        <DialogContent className="w-[calc(100vw-2rem)] min-w-0 lg:min-w-4xl max-h-[90dvh] overflow-hidden flex flex-col p-0">
+          {/* Header */}
+          <div className="border-b border-border bg-background px-5 sm:px-8 py-5 sm:py-8 shrink-0">
+            <div className="flex items-start gap-4 sm:gap-6">
               {adminData && (
                 <>
-                  <Avatar className="h-24 w-24 shrink-0 shadow-lg">
+                  <Avatar className="h-16 w-16 sm:h-24 sm:w-24 shrink-0 shadow-lg">
                     <AvatarImage
                       src={adminData.avatar || "/placeholder.svg"}
                       alt={adminData.name}
                     />
-                    <AvatarFallback className="text-2xl font-bold">
+                    <AvatarFallback className="text-xl sm:text-2xl font-bold">
                       {adminData.name?.substring(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex-1 pt-2">
-                    <div className="flex items-center gap-3 mb-1">
-                      <h2 className="text-2xl font-bold">{adminData.name}</h2>
-                      <Badge variant="outline" className="text-xs">
+                  <div className="flex-1 min-w-0 pt-1 sm:pt-2">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-1">
+                      <h2 className="text-lg sm:text-2xl font-bold truncate">
+                        {adminData.name}
+                      </h2>
+                      <Badge variant="outline" className="text-xs shrink-0">
                         {adminData.role === "super_admin"
                           ? "Super Admin"
                           : "Admin"}
                       </Badge>
                     </div>
-                    <p className="text-muted-foreground text-sm mb-4">
+                    <p className="text-muted-foreground text-sm truncate">
                       {adminData.email}
                     </p>
                   </div>
@@ -109,88 +102,92 @@ export function ViewAdminActivityModal() {
             </div>
           </div>
 
-          {/* Table Section */}
-          <div className="flex-1 overflow-auto px-8">
+          {/* Table */}
+          <div className="flex-1 overflow-auto px-4 sm:px-8">
             <div className="py-6">
-              <Table>
-                <TableHeader className="bg-muted/30">
-                  <TableRow className="border-muted hover:bg-transparent">
-                    <TableHead className="font-semibold text-foreground">
-                      Activity
-                    </TableHead>
-                    <TableHead className="font-semibold text-foreground">
-                      Status
-                    </TableHead>
-                    <TableHead className="text-right font-semibold text-foreground">
-                      Date
-                    </TableHead>
-                    <TableHead className="w-10"></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {activityLogs.map((activity) => {
-                    const description = getDetailedActivityDescription(
-                      activity.action,
-                      activity.resource_type,
-                      activity.resource_name,
-                      activity.changes,
-                    );
-                    const actionColor = getActionColor(activity.action);
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader className="bg-muted/30">
+                    <TableRow className="border-muted hover:bg-transparent">
+                      <TableHead className="font-semibold text-foreground">
+                        Activity
+                      </TableHead>
+                      <TableHead className="font-semibold text-foreground">
+                        Status
+                      </TableHead>
+                      <TableHead className="text-right font-semibold text-foreground whitespace-nowrap">
+                        Date
+                      </TableHead>
+                      <TableHead className="w-10"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {activityLogs.map((activity) => {
+                      const description = getDetailedActivityDescription(
+                        activity.action,
+                        activity.resource_type,
+                        activity.resource_name,
+                        activity.changes,
+                      );
+                      const actionColor = getActionColor(activity.action);
 
-                    return (
-                      <TableRow
-                        key={activity.id}
-                        className="border-border hover:bg-muted/40 transition-colors">
-                        <TableCell className="py-4">
-                          <div className="text-sm">
-                            <div className="flex items-center gap-2 mb-1">
-                              <Badge className={actionColor} variant="outline">
-                                {activity.action.includes("created")
-                                  ? "Created"
-                                  : activity.action.includes("deleted")
-                                    ? "Deleted"
-                                    : "Updated"}
-                              </Badge>
+                      return (
+                        <TableRow
+                          key={activity.id}
+                          className="border-border hover:bg-muted/40 transition-colors">
+                          <TableCell className="py-4">
+                            <div className="text-sm">
+                              <div className="flex items-center gap-2 mb-1">
+                                <Badge
+                                  className={actionColor}
+                                  variant="outline">
+                                  {activity.action.includes("created")
+                                    ? "Created"
+                                    : activity.action.includes("deleted")
+                                      ? "Deleted"
+                                      : "Updated"}
+                                </Badge>
+                              </div>
+                              <p className="font-medium text-foreground">
+                                {description}
+                              </p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {activity.resource_type}
+                              </p>
                             </div>
-                            <p className="font-medium text-foreground">
-                              {description}
-                            </p>
-                            <p className="text-xs text-muted-foreground mt-1">
-                              {activity.resource_type}
-                            </p>
-                          </div>
-                        </TableCell>
-                        <TableCell className="py-4">
-                          <div className="flex items-center gap-2">
-                            {activity.status === "success" ? (
-                              <Badge variant="default">Success</Badge>
-                            ) : (
-                              <>
-                                <AlertCircle className="h-4 w-4 text-red-500" />
-                                <Badge variant="destructive">Error</Badge>
-                              </>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-right text-sm text-muted-foreground py-4">
-                          {formatDateTime(activity.created_at)}
-                        </TableCell>
-                        <TableCell className="py-4">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => {
-                              setSelectedActivity(activity);
-                              setDetailsOpen(true);
-                            }}>
-                            <ChevronDown className="h-4 w-4" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
+                          </TableCell>
+                          <TableCell className="py-4">
+                            <div className="flex items-center gap-2">
+                              {activity.status === "success" ? (
+                                <Badge variant="default">Success</Badge>
+                              ) : (
+                                <>
+                                  <AlertCircle className="h-4 w-4 text-red-500" />
+                                  <Badge variant="destructive">Error</Badge>
+                                </>
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right text-sm text-muted-foreground py-4 whitespace-nowrap">
+                            {formatDateTime(activity.created_at)}
+                          </TableCell>
+                          <TableCell className="py-4">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setSelectedActivity(activity);
+                                setDetailsOpen(true);
+                              }}>
+                              <ChevronDown className="h-4 w-4" />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
               <div className="border-t">
                 <PaginationControls<ActivityLog>
                   data={data ? { ...data, data: data?.data?.logs } : undefined}
@@ -202,7 +199,6 @@ export function ViewAdminActivityModal() {
         </DialogContent>
       </Dialog>
 
-      {/* Details Modal */}
       <ActivityDetailsModal
         activity={selectedActivity}
         open={detailsOpen}

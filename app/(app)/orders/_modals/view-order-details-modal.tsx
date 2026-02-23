@@ -12,10 +12,7 @@ import { useOrderModalStore } from "@/lib/store/orders/use-orders-modals-store";
 
 import { MapPin, Package } from "lucide-react";
 
-import {
-
-  useGetOrderById,
-} from "@/app/_queries/orders/get-order-by-id";
+import { useGetOrderById } from "@/app/_queries/orders/get-order-by-id";
 import { DateDisplay } from "@/components/reuseables/date-display";
 import { getStatusIcon } from "@/components/reuseables/get-status-icon";
 import { Badge } from "@/components/ui/badge";
@@ -26,7 +23,11 @@ import {
   getOrderStatusVariant,
 } from "@/lib/utils";
 import Image from "next/image";
-import { OrderAddressDetails, OrderDetails, OrderItemDetails } from "@/lib/types/order";
+import {
+  OrderAddressDetails,
+  OrderDetails,
+  OrderItemDetails,
+} from "@/lib/types/order";
 
 export function ViewOrderDetailsModal() {
   const orderModal = useOrderModalStore((s) => s.orderModal);
@@ -106,7 +107,10 @@ export function ViewOrderDetailsModal() {
           <Separator />
           <OrderTotalsSection orderItems={orderData.items} />
           <Separator />
-          <NotesSection notes={orderData?.customer_notes} />
+          {orderData.customer_notes && (
+            <NotesSection notes={orderData.customer_notes} />
+          )}
+          {/* <NotesSection notes={orderData?.customer_notes} /> */}
         </div>
       </DialogContent>
     </Dialog>

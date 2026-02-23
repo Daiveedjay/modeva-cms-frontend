@@ -46,25 +46,20 @@ export function SearchActivityLogsModal({
   );
   const [detailsOpen, setDetailsOpen] = useState(false);
 
-  // Debounce the store
   const debouncedStore = useDebounce(store, 1000);
 
-  // Build params from debounced store
   const searchParams_ = useMemo(
     () => buildSearchParams(debouncedStore, page),
     [debouncedStore, page],
   );
 
-  // Check filters on debounced store
   const hasFilters = hasActiveFilters(debouncedStore);
 
-  // Fetch only when filters exist
   const { data, isLoading, isError, isFetching, refetch } =
     useSearchAdminActivityLogs(searchParams_, hasFilters);
 
   const logData = data?.data?.logs || [];
 
-  // Determine state
   const showPlaceholder = !hasActiveFilters(store) && !isError;
   const hasResults = !!logData && logData.length > 0 && hasFilters && !isError;
   const hasNoResults =
@@ -87,7 +82,7 @@ export function SearchActivityLogsModal({
         onOpenChange={(newOpen) => {
           if (!newOpen) handleClose();
         }}>
-        <DialogContent className="max-w-6xl! w-full! overflow-auto max-h-[90vh]">
+        <DialogContent className="w-[calc(100vw-2rem)] min-w-0 lg:min-w-4xl max-h-[90dvh] overflow-auto">
           <DialogHeader>
             <DialogTitle>Search Activity Logs</DialogTitle>
             <DialogDescription>
@@ -98,10 +93,8 @@ export function SearchActivityLogsModal({
 
           <Separator />
 
-          {/* Filter Grid */}
           <ActivityLogsFilterGrid store={store} />
 
-          {/* Active Filters */}
           <ActiveActivityLogsFilterChips
             store={store}
             activeFilterCount={activeFilterCount}
@@ -109,7 +102,6 @@ export function SearchActivityLogsModal({
 
           <Separator />
 
-          {/* Error */}
           {isError && (
             <SearchErrorBase
               title="Something Went Wrong"
@@ -120,24 +112,16 @@ export function SearchActivityLogsModal({
             />
           )}
 
-          {/* Placeholder */}
           {showPlaceholder && !isError && (
             <SearchPlaceholderBase
               isLoading={isLoading}
               title="Start Searching"
               description="Use the filters above to search for admin activities. Try filtering by admin name, email, action, status, resource type, or date range."
-              // suggestions={[
-              //   "Search by admin name",
-              //   "Filter by admin email",
-              //   "Find failed operations",
-              //   "Filter by date range",
-              // ]}
               mainIcon={Activity}
               floatingIcons={[Activity]}
             />
           )}
 
-          {/* No Results */}
           {hasNoResults && (
             <SearchNoResultBase
               query={store.query || "your filters"}
@@ -153,7 +137,6 @@ export function SearchActivityLogsModal({
             />
           )}
 
-          {/* Results */}
           {hasResults && (
             <ActivityLogsSearchResults
               logs={logData}
@@ -169,7 +152,6 @@ export function SearchActivityLogsModal({
         </DialogContent>
       </Dialog>
 
-      {/* Details Modal */}
       <ActivityDetailsModal
         activity={selectedActivity}
         open={detailsOpen}

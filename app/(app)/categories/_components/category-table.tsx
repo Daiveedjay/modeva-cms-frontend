@@ -10,7 +10,7 @@ import { Table, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DeleteCategoryModal } from "../_modals/delete-category-modal";
 
 import { useState } from "react";
-import { ReassignSubcategories } from "../_modals/reassign-sub-categories-modal";
+import { ReassignSubcategoriesModal } from "../_modals/reassign-sub-categories-modal";
 import { ToggleCategoryStatus } from "../_modals/toggle-category-status-modal";
 import { UpdateCategoryModal } from "../_modals/update-category-modal";
 import { CategoryTableBody } from "./category-table-body";
@@ -75,7 +75,7 @@ export default function CategoryTable() {
         <UpdateCategoryModal />
         <DeleteCategoryModal />
         <ToggleCategoryStatus />
-        <ReassignSubcategories />
+        <ReassignSubcategoriesModal />
       </CardContent>
     </Card>
   );

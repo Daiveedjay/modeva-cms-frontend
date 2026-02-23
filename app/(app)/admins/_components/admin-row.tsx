@@ -1,30 +1,16 @@
 "use client";
 
 import AdminActions from "@/app/(app)/admins/_components/admin-actions";
-import { useGetAdminMe } from "@/app/_queries/admin/get-admin-me";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { getMonthYear, getTime } from "@/lib/date-time-utils";
-import { useAdminModalStore } from "@/lib/store/admins/use-admins-modal-store";
 import { Admin } from "@/lib/types/admin";
-import { capitaliseFirstLetter, getOrderStatusVariant } from "@/lib/utils";
+import { capitaliseFirstLetter } from "@/lib/utils";
 
-import { MoreHorizontal, User } from "lucide-react";
+import { User } from "lucide-react";
 
 export default function AdminRow({ admin }: { admin: Admin }) {
-  const { openAdminModal } = useAdminModalStore((store) => store);
-
-  const { data } = useGetAdminMe();
-
-  const is_super_admin = data?.data?.role === "super_admin";
-
   return (
     <>
       <TableRow key={admin.id} className="">

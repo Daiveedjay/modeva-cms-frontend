@@ -46,7 +46,6 @@ export function SearchOrdersModal({
 
   const store = useSearchOrdersStore((store) => store);
 
-  // Debounced store for fetching
   const debouncedStore = useDebounce(store, 1000);
 
   const computedParams = useMemo(
@@ -101,7 +100,7 @@ export function SearchOrdersModal({
 
   return (
     <Dialog open={open} onOpenChange={(newOpen) => !newOpen && handleClose()}>
-      <DialogContent className="max-w-6xl! max-h-5/6 overflow-y-auto w-full!">
+      <DialogContent className="w-[calc(100vw-2rem)] min-w-0 lg:min-w-4xl max-h-[90dvh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Search Orders</DialogTitle>
           <DialogDescription>

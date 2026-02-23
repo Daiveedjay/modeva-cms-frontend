@@ -49,9 +49,7 @@ export function ViewCustomerOrdersModal() {
 
   const { data, isLoading, error, refetch, isFetching } = useGetCustomerOrders(
     customerId || "",
-    {
-      enabled: open && !!customerId,
-    },
+    { enabled: open && !!customerId },
     page,
     limit,
   );
@@ -63,11 +61,7 @@ export function ViewCustomerOrdersModal() {
 
   const handleViewOrder = (order_id: string) => {
     router.push(`/orders`);
-    openOrderModal({
-      type: "view-order-details",
-      orderId: order_id,
-    });
-
+    openOrderModal({ type: "view-order-details", orderId: order_id });
     closeCustomerModal();
   };
 
@@ -87,7 +81,6 @@ export function ViewCustomerOrdersModal() {
         maximumFractionDigits: 2,
       }).format(n);
     };
-
     return { format };
   }, []);
 
@@ -96,8 +89,8 @@ export function ViewCustomerOrdersModal() {
   if (isLoading) {
     return (
       <Dialog open={open} onOpenChange={(next) => !next && handleClose()}>
-        <DialogContent className="sm:max-w-2xl flex items-center justify-center min-h-96">
-          <TableSkeleton rows={5} colSpan={7} />
+        <DialogContent className="w-[calc(100vw-2rem)] min-w-0 sm:max-w-2xl flex items-center justify-center min-h-96">
+          <TableSkeleton rows={5} colSpan={5} />
         </DialogContent>
       </Dialog>
     );
@@ -106,9 +99,9 @@ export function ViewCustomerOrdersModal() {
   if (error || !orders) {
     return (
       <Dialog open={open} onOpenChange={(next) => !next && handleClose()}>
-        <DialogContent className="sm:max-w-2xl">
+        <DialogContent className="w-[calc(100vw-2rem)] min-w-0 sm:max-w-2xl">
           <TableErrorRow
-            colSpan={7}
+            colSpan={5}
             message={error?.message}
             onRetry={() => refetch()}
           />
@@ -123,7 +116,7 @@ export function ViewCustomerOrdersModal() {
       onOpenChange={(next) => {
         if (!next) handleClose();
       }}>
-      <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[calc(100vw-2rem)] min-w-0 sm:max-w-4xl max-h-[90dvh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <ShoppingBag className="h-5 w-5" />
@@ -143,7 +136,7 @@ export function ViewCustomerOrdersModal() {
             <p className="text-muted-foreground">No orders yet</p>
           </div>
         ) : (
-          <div className="border rounded-lg overflow-hidden">
+          <div className="border rounded-lg overflow-auto">
             <Table>
               <TableHeader className="bg-muted/50">
                 <TableRow>
@@ -157,13 +150,13 @@ export function ViewCustomerOrdersModal() {
               <TableBody>
                 {orders.map((order) => (
                   <TableRow key={order.id} className="hover:bg-muted/30">
-                    <TableCell className="font-medium">
+                    <TableCell className="font-medium text-sm">
                       {order.order_number}
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
                       <DateDisplay date={order.created_at} />
                     </TableCell>
-                    <TableCell className="font-semibold">
+                    <TableCell className="font-semibold text-sm">
                       {currency.format(order.total_amount)}
                     </TableCell>
                     <TableCell>
@@ -189,17 +182,12 @@ export function ViewCustomerOrdersModal() {
           </div>
         )}
 
-        {/* <Separator className="my-4" /> */}
-
-        <div className=" flex justify-between ">
+        <div className="flex justify-between items-center mt-2">
           <PaginationControls<CustomerOrder>
             data={data}
             isFetching={isFetching}
-          />{" "}
-          <Button
-            variant="outline"
-            className=" self-end"
-            onClick={() => handleClose()}>
+          />
+          <Button variant="outline" onClick={() => handleClose()}>
             Close
           </Button>
         </div>
