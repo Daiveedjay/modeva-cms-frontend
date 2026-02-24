@@ -5,6 +5,7 @@ import CustomersTable from "@/app/(app)/customers/_components/customers-table";
 import { BanCustomerModal } from "@/app/(app)/customers/_modals/ban-customer-modal";
 import { DeleteCustomerModal } from "@/app/(app)/customers/_modals/delete-customer-modal";
 import { SendCustomerEmailModal } from "@/app/(app)/customers/_modals/send-customer-email-modal";
+import { UnbanCustomerModal } from "@/app/(app)/customers/_modals/unban-customer-modal";
 import { UpdateCustomerProfileModal } from "@/app/(app)/customers/_modals/update-customer-profile-modal";
 import { ViewCustomerOrdersModal } from "@/app/(app)/customers/_modals/view-customer-orders-modal";
 import { ViewCustomerProfileModal } from "@/app/(app)/customers/_modals/view-customer-profile-modal";
@@ -50,6 +51,7 @@ export default function CustomersPage() {
         <SendCustomerEmailModal />
 
         <BanCustomerModal />
+        <UnbanCustomerModal />
         <DeleteCustomerModal />
 
         <UpdateCustomerProfileModal />

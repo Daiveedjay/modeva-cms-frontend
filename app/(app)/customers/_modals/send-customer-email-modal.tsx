@@ -20,9 +20,8 @@ import { useSendCustomerEmail } from "@/app/_queries/customers/send-customer-ema
 import { toastSuccess } from "@/lib/utils";
 
 interface SendEmailInput {
-  to: string;
   subject: string;
-  body: string;
+  message: string;
 }
 
 export function SendCustomerEmailModal() {
@@ -49,11 +48,10 @@ export function SendCustomerEmailModal() {
 
   const formData = useMemo<SendEmailInput>(() => {
     return {
-      to: formChanges.to ?? customer?.email ?? "",
       subject: formChanges.subject ?? "",
-      body: formChanges.body ?? "",
+      message: formChanges.message ?? "",
     };
-  }, [customer, formChanges]);
+  }, [formChanges]);
 
   // Keep modal closed until data loads
   if (!open) return null;
@@ -95,17 +93,12 @@ export function SendCustomerEmailModal() {
   const handleSubmit = async () => {
     setValidationError(null);
 
-    // Validation
-    if (!formData.to.trim()) {
-      setValidationError("Email address is required");
-      return;
-    }
     if (!formData.subject.trim()) {
       setValidationError("Subject is required");
       return;
     }
-    if (!formData.body.trim()) {
-      setValidationError("Message body is required");
+    if (!formData.message.trim()) {
+      setValidationError("Message is required");
       return;
     }
 
@@ -162,7 +155,7 @@ export function SendCustomerEmailModal() {
                 id="to"
                 name="to"
                 type="email"
-                value={formData.to}
+                value={customer.email}
                 onChange={handleInputChange}
                 disabled
                 className="flex-1 h-11 bg-muted/30"
@@ -189,20 +182,20 @@ export function SendCustomerEmailModal() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="body" className="block text-sm font-medium mb-1">
+            <Label htmlFor="message" className="block text-sm font-medium mb-1">
               Message
             </Label>
             <Textarea
-              id="body"
-              name="body"
+              id="message"
+              name="message"
               placeholder="Type your message here..."
-              value={formData.body}
+              value={formData.message}
               onChange={handleInputChange}
               disabled={isPending}
               className="min-h-48 resize-none"
             />
             <p className="text-xs text-muted-foreground">
-              {formData.body.length} characters
+              {formData.message.length} characters
             </p>
           </div>
 

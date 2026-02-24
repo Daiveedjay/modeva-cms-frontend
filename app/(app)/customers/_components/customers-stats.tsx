@@ -1,7 +1,7 @@
 import { useGetCustomersStats } from "@/app/_queries/customers/get-customers-stats";
 import StatsSkeleton from "@/components/reuseables/stats-skeleton";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, growthTextColorClass } from "@/lib/utils";
 import { Users, UserPlus, Star } from "lucide-react";
 
 export default function CustomersStats() {
@@ -24,13 +24,11 @@ export default function CustomersStats() {
           </div>
           <p className="text-xs text-muted-foreground">
             <span
-              className={
-                (stats?.new_customers_growth_percentage ?? 0) > 0
-                  ? "text-green-500"
-                  : "text-destructive"
-              }>
-              {stats?.new_customers_growth_percentage || 0}%
-            </span>{" "}
+              className={growthTextColorClass(
+                stats?.new_customers_growth_percentage,
+              )}>
+              {stats?.new_customers_growth_percentage ?? 0}%{" "}
+            </span>
             since last month
           </p>
         </CardContent>

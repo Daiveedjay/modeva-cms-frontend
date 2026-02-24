@@ -3,6 +3,7 @@
 import { useGetOrdersStats } from "@/app/_queries/orders/get-order-stats";
 import StatsSkeleton from "@/components/reuseables/stats-skeleton";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { growthTextColorClass } from "@/lib/utils";
 import { Clock, Package, CheckCircle, ShoppingCart } from "lucide-react";
 
 export default function OrdersStats() {
@@ -32,9 +33,16 @@ export default function OrdersStats() {
             {isLoading ? "..." : totalOrders}
           </div>
           <p className="text-xs text-muted-foreground">
-            {percentChange !== null
-              ? `${percentChange.toFixed(1)}% from last month`
-              : "No data"}
+            {percentChange !== null ? (
+              <>
+                <span className={growthTextColorClass(percentChange)}>
+                  {percentChange.toFixed(1)}%
+                </span>{" "}
+                from last month
+              </>
+            ) : (
+              "No data"
+            )}
           </p>
         </CardContent>
       </Card>

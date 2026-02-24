@@ -209,3 +209,7 @@ export const ACTION_OPTIONS = [
   { value: "suspended_admin", label: "Suspended Admin" },
   { value: "unsuspended_admin", label: "Unsuspended Admin" },
 ];
+
+export function growthTextColorClass(value?: number) {
+  return value && value > 0 ? "text-green-500" : "text-destructive";
+}

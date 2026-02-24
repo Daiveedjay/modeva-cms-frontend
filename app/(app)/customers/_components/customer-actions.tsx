@@ -64,16 +64,28 @@ export default function CustomerActions({
           }>
           Send Email
         </DropdownMenuItem>
-        <DropdownMenuItem
-          className="text-[#F87C63] "
-          onClick={() =>
-            openCustomerModal({
-              customer_id: customer.id,
-              type: "ban-customer",
-            })
-          }>
-          Ban Customer
-        </DropdownMenuItem>
+        {customer.status === "banned" ? (
+          <DropdownMenuItem
+            className="text-success"
+            onClick={() =>
+              openCustomerModal({
+                customer_id: customer.id,
+                type: "unban-customer",
+              })
+            }>
+            Unban Customer
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem
+            onClick={() =>
+              openCustomerModal({
+                customer_id: customer.id,
+                type: "ban-customer",
+              })
+            }>
+            Ban Customer
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem
           className="text-[#F87C63] "
           onClick={() =>

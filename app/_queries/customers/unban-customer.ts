@@ -1,50 +1,42 @@
 import { apiClient, ApiError } from "@/app/_queries/api-client";
 import { API_ADMIN_PREFIX } from "@/lib/constants";
 import { ApiResponse } from "@/lib/types";
-
+import { BanCustomerResponse } from "@/lib/types/customer"; // reusing the same response type
 import { toastError } from "@/lib/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-interface DeleteCustomerRequest {
-  reason: string;
-}
-
-interface DeleteCustomerResponse {
-  id: string;
-  name: string;
-  deleted_at: string;
-  deletion_reason: string;
-}
-
-export async function deleteCustomer(
+// API call for unbanning a customer
+export async function unbanCustomer(
   customerId: string,
-  data: DeleteCustomerRequest,
+  data: { reason: string },
   signal?: AbortSignal,
-): Promise<ApiResponse<DeleteCustomerResponse>> {
-  const resp = await apiClient<DeleteCustomerResponse, DeleteCustomerRequest>(
-    `${API_ADMIN_PREFIX}/customers/${customerId}`,
+): Promise<ApiResponse<BanCustomerResponse>> {
+  const resp = await apiClient<BanCustomerResponse>(
+    `${API_ADMIN_PREFIX}/customers/${customerId}/unban`,
     {
-      method: "delete",
+      method: "post",
       withCredentials: true,
       signal,
-      data,
+      data, // send { reason: string } directly
     },
   );
   return resp;
 }
 
-export function useDeleteCustomer(customerId: string) {
+// React Query hook for unbanning
+export function useUnbanCustomer(customerId: string) {
   const queryClient = useQueryClient();
 
   return useMutation<
-    ApiResponse<DeleteCustomerResponse>,
+    ApiResponse<BanCustomerResponse>,
     ApiError,
-    DeleteCustomerRequest
+    { reason: string } // pass an object with reason
   >({
-    mutationFn: (data) => deleteCustomer(customerId, data),
+    mutationFn: (data) => unbanCustomer(customerId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["customers"] });
       queryClient.invalidateQueries({ queryKey: ["customer", customerId] });
+      queryClient.invalidateQueries({ queryKey: ["all-admin-activity"] });
     },
     onError: (error: ApiError) => {
       if (error.isCanceled) return;
@@ -55,7 +47,7 @@ export function useDeleteCustomer(customerId: string) {
       } else if (error.statusCode === 409) {
         toastError("Conflict", error.message);
       } else {
-        toastError("Failed to delete customer", error.message);
+        toastError("Failed to unban customer", error.message);
       }
     },
   });

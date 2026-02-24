@@ -52,6 +52,10 @@ export type CustomerModalState =
       customer_id: string | null;
     }
   | {
+      type: "unban-customer";
+      customer_id: string | null;
+    }
+  | {
       type: "delete-customer";
       customer_id: string | null;
     }

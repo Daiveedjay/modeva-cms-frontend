@@ -1,4 +1,3 @@
-
 /* =====================================
  * Value types
  * ===================================== */
@@ -25,9 +24,8 @@ export interface BanCustomerResponse {
 }
 
 export interface SendEmailRequest {
-  to: string;
   subject: string;
-  body: string;
+  message: string;
 }
 
 export interface SendEmailResponse {

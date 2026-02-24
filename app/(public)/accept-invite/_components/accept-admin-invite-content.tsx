@@ -81,10 +81,10 @@ export default function AcceptAdminInviteContent() {
         <div className="w-full max-w-lg">
           {/* Content Section */}
           <div className="mb-10 text-center md:text-left">
-            <h1 className="text-3xl font-bold tracking-tight text-foreground mb-3 text-balance">
+            <h1 className="text-3xl text-left sm:text-center font-bold tracking-tight text-foreground mb-3 text-balance">
               Complete your account
             </h1>
-            <p className="text-base text-muted-foreground leading-relaxed">
+            <p className="text-base text-left sm:text-center text-muted-foreground leading-relaxed">
               You&apos;ve been invited to join. Set up your account by creating
               a password and choosing your name.
             </p>
@@ -234,7 +234,7 @@ export default function AcceptAdminInviteContent() {
             {/* Footer Info */}
             <div className="pt-4 border-t border-border text-center">
               <p className="text-xs text-muted-foreground">
-                This invitation expires in 7 days
+                This invitation expires in 2 days
               </p>
             </div>
           </div>
