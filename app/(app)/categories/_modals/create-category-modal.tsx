@@ -22,8 +22,8 @@ import {
   MIN_CATEGORY_NAME_LENGTH,
 } from "@/lib/constants";
 import { useCategoriesModalStore } from "@/lib/store/categories/use-categories-modal-store";
-import { toastSuccess } from "@/lib/utils";
-import { FormEvent, useState } from "react";
+import { toastError, toastSuccess } from "@/lib/utils";
+import { FormEvent, useMemo, useState } from "react";
 
 export function CreateCategoryModal() {
   const categoryModal = useCategoriesModalStore((s) => s.categoryModal);
@@ -47,7 +47,6 @@ export function CreateCategoryModal() {
 
   const parent = parentData?.data;
 
-  // Don't render modal if we're waiting for parent data
   if (!open) return null;
   if (shouldFetchParent && isLoadingParent) return null;
 
@@ -71,6 +70,8 @@ export function CreateCategoryModal() {
   );
 }
 
+/* ========================= CATEGORY ========================= */
+
 function CategoryContent() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -81,27 +82,39 @@ function CategoryContent() {
 
   const { mutateAsync: createCategory, isPending } = useCreateCategory();
 
+  const trimmedName = name.trim();
+  const trimmedDescription = description.trim();
+
+  const isFormValid = useMemo(
+    () => Boolean(trimmedName && trimmedDescription),
+    [trimmedName, trimmedDescription],
+  );
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
+    if (!isFormValid) {
+      toastError("Missing fields", "Name and description are required.");
+      return;
+    }
+
     try {
       await createCategory({
-        name: name.trim(),
-        description: description.trim(),
+        name: trimmedName,
+        description: trimmedDescription,
       });
 
       toastSuccess("Category added successfully");
       closeCategoryModal();
     } catch {
-      // Error toast is handled in the API file
-      // Keep modal open so user can retry
+      // Error handled in API file
     }
   };
 
   return (
     <>
       <DialogHeader>
-        <DialogTitle className=" ">Add new category</DialogTitle>
+        <DialogTitle>Add new category</DialogTitle>
       </DialogHeader>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -113,7 +126,6 @@ function CategoryContent() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={`Enter category name (min ${MIN_CATEGORY_NAME_LENGTH}, max ${MAX_CATEGORY_NAME_LENGTH} characters)`}
-            required
             maxLength={MAX_CATEGORY_NAME_LENGTH}
             disabled={isPending}
           />
@@ -124,11 +136,12 @@ function CategoryContent() {
         </div>
 
         <div className="space-y-2">
-          <label className="block text-sm font-medium mb-1">Description</label>
+          <label className="block text-sm font-medium mb-1">
+            Description <RequiredTag />
+          </label>
           <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full resize-none whitespace-pre-wrap wrap-break-word overflow-hidden"
             rows={3}
             placeholder="Enter description"
             maxLength={MAX_CATEGORY_DESCRIPTION_LENGTH}
@@ -148,7 +161,7 @@ function CategoryContent() {
             disabled={isPending}>
             Cancel
           </Button>
-          <Button type="submit" disabled={!name.trim() || isPending}>
+          <Button type="submit" disabled={!isFormValid || isPending}>
             {isPending && <Spinner />}
             {isPending ? "Adding category..." : "Add category"}
           </Button>
@@ -157,6 +170,8 @@ function CategoryContent() {
     </>
   );
 }
+
+/* ====================== SUB CATEGORY ====================== */
 
 function SubCategoryContent({
   parent_id,
@@ -176,21 +191,33 @@ function SubCategoryContent({
     parent_id,
   });
 
+  const trimmedName = name.trim();
+  const trimmedDescription = description.trim();
+
+  const isFormValid = useMemo(
+    () => Boolean(trimmedName && trimmedDescription),
+    [trimmedName, trimmedDescription],
+  );
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
+    if (!isFormValid) {
+      toastError("Missing fields", "Name and description are required.");
+      return;
+    }
+
     try {
       await createCategory({
-        name: name.trim(),
-        description: description.trim(),
-        parent_id: parent_id ?? null,
+        name: trimmedName,
+        description: trimmedDescription,
+        parent_id,
       });
 
       toastSuccess("Sub-category added successfully");
       closeCategoryModal();
     } catch {
-      // Error toast is handled in the API file
-      // Keep modal open so user can retry
+      // Error handled in API file
     }
   };
 
@@ -199,8 +226,7 @@ function SubCategoryContent({
       <DialogHeader>
         <DialogTitle>Add Sub-category to &apos;{parent_name}&apos;</DialogTitle>
         <DialogDescription>
-          Create a new Sub-category for your products. You can organise products
-          better with categories.
+          Create a new sub-category for your products.
         </DialogDescription>
       </DialogHeader>
 
@@ -213,7 +239,6 @@ function SubCategoryContent({
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={`Enter subcategory name (min ${MIN_CATEGORY_NAME_LENGTH}, max ${MAX_CATEGORY_NAME_LENGTH} characters)`}
-            required
             maxLength={MAX_CATEGORY_NAME_LENGTH}
             disabled={isPending}
           />
@@ -224,11 +249,12 @@ function SubCategoryContent({
         </div>
 
         <div className="space-y-2">
-          <label className="block text-sm font-medium mb-1">Description</label>
+          <label className="block text-sm font-medium mb-1">
+            Description <RequiredTag />
+          </label>
           <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full resize-none wrap-break-word overflow-hidden"
             rows={4}
             placeholder="Enter description"
             maxLength={MAX_CATEGORY_DESCRIPTION_LENGTH}
@@ -248,7 +274,7 @@ function SubCategoryContent({
             disabled={isPending}>
             Cancel
           </Button>
-          <Button type="submit" disabled={!name.trim() || isPending}>
+          <Button type="submit" disabled={!isFormValid || isPending}>
             {isPending && <Spinner />}
             {isPending ? "Adding sub-category..." : "Add sub-category"}
           </Button>
