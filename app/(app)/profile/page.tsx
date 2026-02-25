@@ -18,15 +18,6 @@ import { ProfileInfo } from "@/app/(app)/profile/_components/profile-info";
 import { ProfileActivityLog } from "@/app/(app)/profile/_components/profile-activity-log";
 
 export default function ProfilePage() {
-  const [isSaving, setIsSaving] = useState(false);
-
-  const handleSave = async () => {
-    setIsSaving(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsSaving(false);
-  };
-
   return (
     <SidebarInset>
       <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
@@ -66,22 +57,6 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-      {/* <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">
-              Admin Management
-            </h1>
-            <p className="text-muted-foreground">
-              Manage admin users and monitor system activity
-            </p>
-          </div>
-          <Button onClick={() => setShowAddModal(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            Add Admin
-          </Button>
-        </div>
-      </div> */}
     </SidebarInset>
   );
 }

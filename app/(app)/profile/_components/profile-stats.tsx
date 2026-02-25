@@ -106,7 +106,13 @@ export default function ProfileStats() {
             </div>
             <p className="text-xs text-muted-foreground">
               {profile?.last_login_at
-                ? getTime(new Date(profile.last_login_at))
+                ? new Date(profile.last_login_at).toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
                 : "—"}
             </p>
           </CardContent>

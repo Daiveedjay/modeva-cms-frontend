@@ -96,7 +96,28 @@ export function ViewCustomerOrdersModal() {
     );
   }
 
-  if (error || !orders) {
+  if (orders?.length === 0) {
+    return (
+      <Dialog open={open} onOpenChange={(next) => !next && handleClose()}>
+        <DialogContent className="w-[calc(100vw-2rem)] min-w-0 sm:max-w-2xl">
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <ShoppingBag className="h-12 w-12 text-muted-foreground/50 mb-4" />
+            <p className="text-muted-foreground">No orders yet</p>
+            <Button
+              variant="outline"
+              className="mt-6"
+              onClick={() => {
+                handleClose();
+              }}>
+              Close
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  if (error) {
     return (
       <Dialog open={open} onOpenChange={(next) => !next && handleClose()}>
         <DialogContent className="w-[calc(100vw-2rem)] min-w-0 sm:max-w-2xl">
@@ -123,14 +144,14 @@ export function ViewCustomerOrdersModal() {
             Customer Orders
           </DialogTitle>
           <DialogDescription>
-            All orders from {orders[0]?.customer_name} ({meta_data?.total}{" "}
+            All orders from {orders?.[0]?.customer_name} ({meta_data?.total}{" "}
             total)
           </DialogDescription>
         </DialogHeader>
 
         <Separator className="my-4" />
 
-        {orders.length === 0 ? (
+        {orders?.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <ShoppingBag className="h-12 w-12 text-muted-foreground/50 mb-4" />
             <p className="text-muted-foreground">No orders yet</p>
@@ -148,7 +169,7 @@ export function ViewCustomerOrdersModal() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {orders.map((order) => (
+                {orders?.map((order) => (
                   <TableRow key={order.id} className="hover:bg-muted/30">
                     <TableCell className="font-medium text-sm">
                       {order.order_number}

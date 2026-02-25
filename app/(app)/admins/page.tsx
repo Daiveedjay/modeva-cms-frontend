@@ -18,6 +18,7 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import PageHeader from "@/components/reuseables/page-header";
 
 export default function AdminsPage() {
   // Modal states
@@ -40,14 +41,10 @@ export default function AdminsPage() {
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">
-              Admin Management
-            </h1>
-            <p className="text-muted-foreground">
-              Manage admin users and monitor system activity
-            </p>
-          </div>
+          <PageHeader
+            title=" Admin Management"
+            subtitle=" Manage admin users and monitor system activity"
+          />
           <Button onClick={() => setShowInviteModal(true)}>
             <Plus className="mr-2 h-4 w-4" />
             Invite Admin

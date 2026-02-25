@@ -11,7 +11,7 @@ import { Admin } from "@/lib/types/admin";
 import { MoreHorizontal } from "lucide-react";
 
 export default function AdminActions({ admin }: { admin: Admin }) {
-  const { openAdminModal } = useAdminModalStore((store) => store);
+  const openAdminModal = useAdminModalStore((store) => store.openAdminModal);
   const { data } = useGetAdminMe();
 
   const is_super_admin = data?.data?.role === "super_admin";

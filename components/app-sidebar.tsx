@@ -176,13 +176,17 @@ export function AppSidebar() {
                   side="bottom"
                   align="end"
                   sideOffset={4}>
-                  <Link href="/profile">
+                  <Link href="/profile" onClick={() => setOpenMobile(false)}>
                     <DropdownMenuItem>
                       <User />
                       Profile
                     </DropdownMenuItem>
                   </Link>
-                  <DropdownMenuItem onClick={() => setLogoutModalOpen(true)}>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setOpenMobile(false);
+                      setLogoutModalOpen(true);
+                    }}>
                     <LogOut />
                     Log out
                   </DropdownMenuItem>
