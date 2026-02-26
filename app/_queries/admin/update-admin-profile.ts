@@ -5,25 +5,12 @@ import { UpdateAdminProfileInput } from "@/lib/types/admin";
 import { toastError } from "@/lib/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import imageCompression from "browser-image-compression";
 
 const CLOUD_NAME =
   process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "your-cloud-name";
 
 const UPLOAD_PRESET =
   process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "avatars";
-
-async function compressImage(file: File): Promise<File> {
-  const sizeMB = file.size / 1024 / 1024;
-  if (sizeMB < 0.3) return file;
-
-  return imageCompression(file, {
-    maxSizeMB: 0.5,
-    maxWidthOrHeight: 512,
-    useWebWorker: true,
-    fileType: "image/jpeg",
-  });
-}
 
 async function uploadAvatarToCloudinary(
   file: File,
@@ -33,7 +20,6 @@ async function uploadAvatarToCloudinary(
 
   formData.append("file", file);
   formData.append("upload_preset", UPLOAD_PRESET);
-
   // Same public_id every time = implicit overwrite
   formData.append("public_id", `modeva/avatars/${adminId}/avatar`);
 
@@ -52,8 +38,7 @@ async function updateAdminProfile(
   let avatar_url: string | undefined;
 
   if (input.avatar) {
-    const compressed = await compressImage(input.avatar);
-    avatar_url = await uploadAvatarToCloudinary(compressed, input.adminId);
+    avatar_url = await uploadAvatarToCloudinary(input.avatar, input.adminId);
   }
 
   const payload = {
@@ -89,9 +74,8 @@ export function useUpdateAdminProfile() {
       queryClient.invalidateQueries({ queryKey: ["admin-me"] });
     },
     onError: (error: ApiError) => {
-      if (error.isCanceled) {
-        return;
-      }
+      if (error.isCanceled) return;
+
       if (error.statusCode === 400) {
         toastError(`Validation error: ${error.message}`);
       } else if (error.statusCode === 413) {
