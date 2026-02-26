@@ -61,7 +61,7 @@ export default function BasicInfoTab() {
               onChange={(e) => {
                 if (e.target.value.length > MAX_PRODUCT_NAME_LENGTH) {
                   toastWarn(
-                    `Product name cannot exceed ${MAX_PRODUCT_NAME_LENGTH} characters`
+                    `Product name cannot exceed ${MAX_PRODUCT_NAME_LENGTH} characters`,
                   );
                   return;
                 }
@@ -87,7 +87,7 @@ export default function BasicInfoTab() {
               onChange={(e) => {
                 if (e.target.value.length > MAX_DESCRIPTION_LENGTH) {
                   toastWarn(
-                    `Description cannot exceed ${MAX_DESCRIPTION_LENGTH} characters`
+                    `Description cannot exceed ${MAX_DESCRIPTION_LENGTH} characters`,
                   );
                   return;
                 }
@@ -111,7 +111,9 @@ export default function BasicInfoTab() {
           {/* Price & Category */}
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="price">Price</Label>
+              <Label htmlFor="price">
+                Price <RequiredTag />
+              </Label>
               <Input
                 id="price"
                 type="number"
@@ -164,7 +166,7 @@ function CompositionFields({
 }: {
   composition: { label: string; content: string }[];
   setBasicInfo: (
-    info: Partial<{ composition: { label: string; content: string }[] }>
+    info: Partial<{ composition: { label: string; content: string }[] }>,
   ) => void;
 }) {
   const handleAddComposition = () => {
@@ -192,7 +194,7 @@ function CompositionFields({
             onChange={(e) =>
               setBasicInfo({
                 composition: composition.map((comp, i) =>
-                  i === index ? { ...comp, label: e.target.value } : comp
+                  i === index ? { ...comp, label: e.target.value } : comp,
                 ),
               })
             }
@@ -204,7 +206,7 @@ function CompositionFields({
             onChange={(e) =>
               setBasicInfo({
                 composition: composition.map((comp, i) =>
-                  i === index ? { ...comp, content: e.target.value } : comp
+                  i === index ? { ...comp, content: e.target.value } : comp,
                 ),
               })
             }
