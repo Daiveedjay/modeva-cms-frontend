@@ -77,7 +77,9 @@ export default function BasicInfoTab() {
 
           {/* Description */}
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">
+              Description <RequiredTag />
+            </Label>
             <Textarea
               id="description"
               wrap="soft"

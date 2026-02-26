@@ -20,9 +20,15 @@ export const basicInfoSchema = z.object({
       message: `Product name must be at most ${MAX_PRODUCT_NAME_LENGTH} characters`,
     }),
 
-  description: z.string().max(MAX_DESCRIPTION_LENGTH, {
-    message: "Description must be at most 60 characters",
-  }),
+  description: z
+    .string()
+    .trim()
+    .min(1, {
+      message: "Description is required",
+    })
+    .max(MAX_DESCRIPTION_LENGTH, {
+      message: `Description must be at most ${MAX_DESCRIPTION_LENGTH} characters`,
+    }),
   // Must be greater than 0
   price: z.number().min(1, {
     message: "Price must be greater than 0",
