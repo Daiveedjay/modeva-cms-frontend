@@ -305,17 +305,24 @@ const AdditionalInfo = ({
   updatedAt,
 }: AdditionalInfoProps) => {
   const createdAtLabel = createdAt
-    ? createdAt.toLocaleDateString(undefined, {
+    ? createdAt.toLocaleString(undefined, {
         year: "numeric",
         month: "short",
         day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
       })
     : "—";
+
   const updatedAtLabel = updatedAt
-    ? updatedAt.toLocaleDateString(undefined, {
+    ? updatedAt.toLocaleString(undefined, {
         year: "numeric",
         month: "short",
         day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
       })
     : "—";
 
@@ -329,6 +336,7 @@ const AdditionalInfo = ({
           </label>
           <div className="mt-1">{createdAtLabel}</div>
         </div>
+
         <div>
           <label className="text-sm font-medium text-muted-foreground">
             Total Value
@@ -337,6 +345,7 @@ const AdditionalInfo = ({
             ${(price * totalStock).toLocaleString()}
           </div>
         </div>
+
         <div>
           <label className="text-muted-foreground flex items-center gap-2">
             <Calendar className="h-4 w-4" />

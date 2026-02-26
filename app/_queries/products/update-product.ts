@@ -12,13 +12,8 @@ import { API_ENDPOINT, API_ADMIN_PREFIX } from "@/lib/constants";
  * Check if media has any file changes (new uploads)
  */
 function hasMediaChanges(media: ProductMedia): boolean {
-  // Check if primary image is a new file
-  if (media.primary.file !== null) {
-    return true;
-  }
-
-  // Check if any "other" images are new files
-  return media.other.some((img) => img.file !== null);
+  if (media.primary.file) return true;
+  return media.other.some((img) => img.file);
 }
 
 /**
