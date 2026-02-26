@@ -3,6 +3,9 @@ import z from "zod";
 
 const seoFieldSchema = z.object({
   seo_title: z.string().min(1, { message: "SEO title is required" }),
+  seo_description: z
+    .string()
+    .min(1, { message: "SEO description is required" }),
 });
 export function validateSeo(data: ProductSeo) {
   const result = seoFieldSchema.safeParse(data);

@@ -14,7 +14,7 @@ import { toastWarn } from "@/lib/utils";
 import { motion } from "motion/react";
 export default function SeoTab() {
   const { seo_title, seo_description } = useProductSeoStore(
-    (state) => state.seo
+    (state) => state.seo,
   );
 
   const setSeo = useProductSeoStore((state) => state.setSeo);
@@ -33,7 +33,7 @@ export default function SeoTab() {
             onChange={(e) => {
               if (e.target.value.length > MAX_SEO_TITLE_LENGTH) {
                 toastWarn(
-                  `SEO title cannot exceed ${MAX_SEO_TITLE_LENGTH} characters`
+                  `SEO title cannot exceed ${MAX_SEO_TITLE_LENGTH} characters`,
                 );
                 return;
               }
@@ -47,7 +47,9 @@ export default function SeoTab() {
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="seo-description">SEO Description</Label>
+          <Label htmlFor="seo-description">
+            SEO Description <RequiredTag />
+          </Label>
           <Textarea
             id="seo-description"
             placeholder="Enter SEO description"
@@ -55,7 +57,7 @@ export default function SeoTab() {
             onChange={(e) => {
               if (e.target.value.length > MAX_SEO_DESCRIPTION_LENGTH) {
                 toastWarn(
-                  `SEO description cannot exceed ${MAX_SEO_DESCRIPTION_LENGTH} characters`
+                  `SEO description cannot exceed ${MAX_SEO_DESCRIPTION_LENGTH} characters`,
                 );
                 return;
               }
